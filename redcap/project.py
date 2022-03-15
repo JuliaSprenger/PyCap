@@ -914,6 +914,57 @@ class Project(object):
 
         return self._call_api(payload, "exp_proj")[0]
 
+    def export_repeating_instruments_events(self, format="json"):
+        """
+        Export Project Information
+
+        Parameters
+        ----------
+        format: (json, xml, csv), json by default
+            Format of returned data
+        """
+
+        payload = self.__basepl(content="repeatingFormsEvents", format=format)
+        return self._call_api(payload, "exp_rep_forms")[0]
+
+    def import_repeating_instruments_events(
+        self,
+        to_import,
+        format="json",
+        return_format="json"
+    ):
+        """
+        Import repeating instruments and event configuration into the RedCap Project
+
+        Parameters
+        ----------
+        to_import : array of dicts, csv/xml string, ``pandas.DataFrame``
+            :note:
+                If you pass a csv or xml string, you should use the
+                ``format`` parameter appropriately.
+            :note:
+                Keys of the dictionaries should be subset of project's,
+                fields, but this isn't a requirement. If you provide keys
+                that aren't defined fields, the returned response will
+                contain an ``'error'`` key.
+        format : ('json'),  'xml', 'csv'
+            Format of incoming data. By default, to_import will be json-encoded
+        return_format : ('json'), 'csv', 'xml'
+            format of error message
+
+        Returns
+        -------
+        response : dict, str
+            response from REDCap API, json-decoded if ``return_format`` == ``'json'``
+        """
+
+        payload = self._initialize_import_payload(to_import, format, "repeatingFormsEvents")
+        payload["returnFormat"] = return_format
+        response = self._call_api(payload, "imp_rep_forms")[0]
+        if "error" in str(response):
+            raise RedcapError(str(response))
+        return response
+
     # pylint: disable=too-many-locals
     def export_reports(
         self,

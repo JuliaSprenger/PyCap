@@ -87,6 +87,11 @@ class RCRequest(object):
                 "metadata",
                 "Importing record but content is not record",
             ),
+            "imp_rep_forms": (
+                ["data", "format"],
+                "repeatingFormsEvents",
+                "Importing data is not repeating forms",
+            ),
             "metadata": (
                 ["format"],
                 "metadata",
@@ -127,6 +132,11 @@ class RCRequest(object):
                 ["format"],
                 "project",
                 "Exporting project info but content is not project",
+            ),
+            "exp_rep_forms": (
+                ["format"],
+                "repeatingFormsEvents",
+                "Exporting repeating instruments and events but is not repeatingFormsEvents",
             ),
             "exp_user": (["format"], "user", "Exporting users but content is not user"),
             "exp_survey_participant_list": (

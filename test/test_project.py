@@ -217,6 +217,8 @@ class ProjectTests(unittest.TestCase):
                     resp = 123
                 elif request_type == "project":
                     resp = {"project_id": 123}
+                elif request_type == "repeatingFormsEvents":
+                    resp = [{"form_name": "test", "custom_form_label": ""}]
 
                 self.assertIsNotNone(
                     resp, msg="No response for request_type '{}'".format(request_type)
@@ -427,6 +429,24 @@ class ProjectTests(unittest.TestCase):
         imported_data = self.reg_proj.import_metadata(reduced_data)
 
         self.assertEqual(len(imported_data), len(reduced_data))
+
+    @responses.activate
+    def test_export_json_repeating_instruments(self):
+        """ Make sure we get a list of dicts"""
+        self.add_normalproject_response()
+        mdata = self.reg_proj.export_repeating_instruments_events()
+        self.assertIsInstance(mdata, list)
+        for record in mdata:
+            self.assertIsInstance(record, dict)
+
+    @responses.activate
+    def test_import_repeating_instruments(self):
+        "Test repeating instrument import"
+        self.add_normalproject_response()
+        data = self.reg_proj.export_repeating_instruments_events()
+        response = self.reg_proj.import_repeating_instruments_events(data)
+        self.assertNotIn("error", response)
+        self.assertListEqual(data, response)
 
     @staticmethod
     def is_good_csv(csv_string):
