@@ -809,5 +809,12 @@ class ProjectTests(unittest.TestCase):
 
         self.assertEqual(info["project_id"], 123)
 
+    @responses.activate
+    def test_import_project_info(self):
+        "Test project information import"
+        self.add_normalproject_response()
+        data = self.reg_proj.export_project_info()
+        response = self.reg_proj.import_project_info(data)
+        self.assertDictEqual(data, response)
 
 # pylint: enable=too-many-public-methods

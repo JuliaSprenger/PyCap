@@ -914,6 +914,43 @@ class Project(object):
 
         return self._call_api(payload, "exp_proj")[0]
 
+    def import_project_info(
+        # project_title, project_language, purpose, purpose_other, project_notes, custom_record_label, secondary_unique_field, is_longitudinal, surveys_enabled, scheduling_enabled, record_autonumbering_enabled, randomization_enabled, project_irb_number, project_grant_number, project_pi_firstname, project_pi_lastname, display_today_now_button
+        self,
+        to_import,
+        format="json",
+    ):
+        """
+        Import project information into the RedCap Project
+
+        Parameters
+        ----------
+        to_import : array of dicts, csv/xml string, ``pandas.DataFrame``
+            :note:
+                If you pass a csv or xml string, you should use the
+                ``format`` parameter appropriately.
+            :note:
+                Keys of the dictionaries should be subset of project's,
+                fields, but this isn't a requirement. If you provide keys
+                that aren't defined fields, the returned response will
+                contain an ``'error'`` key.
+        format : ('json'),  'xml', 'csv'
+            Format of incoming data. By default, to_import will be json-encoded
+        return_format : ('json'), 'csv', 'xml'
+            Response format. By default, response will be json-decoded.
+
+        Returns
+        -------
+        response : dict, str
+            response from REDCap API, json-decoded if ``return_format`` == ``'json'``
+        """
+        payload = self._initialize_import_payload(to_import, format, "project")
+
+        response = self._call_api(payload, "imp_proj")[0]
+        if "error" in response:
+            raise RedcapError(str(response))
+        return response
+
     def export_repeating_instruments_events(self, format="json"):
         """
         Export Project Information

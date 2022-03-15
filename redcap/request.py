@@ -133,6 +133,11 @@ class RCRequest(object):
                 "project",
                 "Exporting project info but content is not project",
             ),
+            "imp_proj": (
+                ["format", "type", "data"],
+                "project",
+                "Importing project info but content is not project",
+            ),
             "exp_rep_forms": (
                 ["format"],
                 "repeatingFormsEvents",
